@@ -36,7 +36,7 @@ jobs:
         compiler: aosp-clang/master/clang-r498229b
         defconfig: vayu_user_defconfig
         image: Image.gz-dtb
-        usekprobe: yes
+        usekprobe: no
 
     - name: Release build
       uses: ncipollo/release-action@v1
