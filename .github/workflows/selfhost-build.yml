@@ -41,6 +41,6 @@ jobs:
     - name: Release build
       uses: ncipollo/release-action@v1
       with:
-        artifacts: /${GITHUB_WORKSPACE}/zipper/${{ steps.build.outputs.outfile }}
+        artifacts: ${{ github.workspace }}/zipper/${{ steps.build.outputs.outfile }}
         tag: ${{ github.event.inputs.tag }}
         token: ${{ secrets.GITHUB_TOKEN }}
