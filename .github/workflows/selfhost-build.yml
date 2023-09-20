@@ -1,0 +1,46 @@
+name: Selfhost Manual Build SU
+
+on: 
+  workflow_dispatch:
+      inputs:
+        tag:
+          type: string
+          description: Release tag
+          required: true
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - name: cleanup #https://github.com/actions/checkout/issues/211
+      run: |
+        echo ${{ secrets.DEPLOY_PASSWORD }} | sudo -S rm -rf ${GITHUB_WORKSPACE}
+        mkdir ${GITHUB_WORKSPACE}
+      
+    - name: Checkout kernel source
+      uses: actions/checkout@v4
+
+    - name: Checkout zipper
+      uses: actions/checkout@v4
+      with:
+        repository: lu5ck/AnyKernel3-CrDorid-PocoX3Pro
+        path: zipper
+        
+    - name: Android kernel build
+      uses: lu5ck/android-kernelsu-actions@master
+      id: build
+      env:
+        NAME: CrDroid-KernelSU
+      with:
+        arch: arm64
+        compiler: aosp-clang/master/clang-r498229b
+        defconfig: vayu_user_defconfig
+        image: Image.gz-dtb
+        usekprobe: yes
+
+    - name: Release build
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: /${GITHUB_WORKSPACE}/zipper/${{ steps.build.outputs.outfile }}
+        tag: ${{ github.event.inputs.tag }}
+        token: ${{ secrets.GITHUB_TOKEN }}
