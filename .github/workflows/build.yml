@@ -1,0 +1,56 @@
+name: Selfhost Manual Build SU
+
+on: 
+  workflow_dispatch:
+      inputs:
+        tag:
+          type: string
+          description: Release tag
+          required: true
+        ref:
+          type: string
+          description: reference head
+          required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        remove-dotnet: true
+        remove-android: true
+        remove-haskell: true
+        remove-codeql: true
+        swap-size-mb: 16384
+
+    - name: Checkout kernel source
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.ref }}
+
+    - name: Checkout zipper
+      uses: actions/checkout@v4
+      with:
+        repository: lu5ck/AnyKernel3-CrDorid-PocoX3Pro
+        path: zipper
+
+    - name: Android kernel build
+      uses: lu5ck/android-kernelsu-actions@master
+      id: build
+      env:
+        NAME: CrDroid-KernelSU
+      with:
+        arch: arm64
+        compiler: aosp-clang/master/clang-r498229b
+        defconfig: vayu_user_defconfig
+        image: Image.gz-dtb
+        usekprobe: no
+
+    - name: Release build
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: ${{ github.workspace }}/zipper/${{ steps.build.outputs.outfile }}
+        tag: ${{ github.event.inputs.tag }}
+        token: ${{ secrets.GITHUB_TOKEN }}
