@@ -1,4 +1,4 @@
-name: Selfhost Manual Build SU
+name: Manual Build SU
 
 on: 
   workflow_dispatch:
@@ -24,6 +24,7 @@ jobs:
         remove-haskell: true
         remove-codeql: true
         swap-size-mb: 16384
+        root-reserve-mb: 60000
 
     - name: Checkout kernel source
       uses: actions/checkout@v4
