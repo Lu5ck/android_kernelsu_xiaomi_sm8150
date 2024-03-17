@@ -22,7 +22,7 @@ jobs:
         remove-haskell: true
         remove-codeql: true
         root-reserve-mb: 30000
-        swap-size-mb: 16384
+        swap-size-mb: 24576
 
     - name: Checkout kernel source
       uses: actions/checkout@v4
