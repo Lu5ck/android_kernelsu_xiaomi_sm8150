@@ -21,7 +21,7 @@ jobs:
         remove-android: true
         remove-haskell: true
         remove-codeql: true
-        root-reserve-mb: 30000
+        root-reserve-mb: 40000
         swap-size-mb: 24576
 
     - name: Checkout kernel source
@@ -40,7 +40,7 @@ jobs:
         NAME: CrDroid-KernelSU
       with:
         arch: arm64
-        compiler: aosp-clang/master/clang-r498229b
+        compiler: aosp-clang/master/clang-r510928
         defconfig: vayu_user_defconfig
         image: Image.gz-dtb
         usekprobe: no
